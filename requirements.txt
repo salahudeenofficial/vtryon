@@ -22,3 +22,4 @@ pillow
 huggingface-hub
 accelerate
 transformers
+peft  # Required for loading LoRA weights
