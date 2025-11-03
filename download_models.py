@@ -12,19 +12,22 @@ def main():
     model_dir.mkdir(parents=True, exist_ok=True)
     
     print("[INFO] Downloading Qwen-Image-Edit-2509 model files...")
-    # Download transformer subfolder and all config files needed for pipeline
-    # model_index.json is required for DiffusionPipeline to auto-detect QwenImageEditPlusPipeline
+    # Download all necessary components including model weights
+    # Need to download actual safetensors files, not just configs
     snapshot_download(
         repo_id="Qwen/Qwen-Image-Edit-2509",
         local_dir=str(model_dir),
         local_dir_use_symlinks=False,
         repo_type="model",
         allow_patterns=[
-            "transformer/**",      # Transformer subfolder with weights
-            "processor/**",         # Processor configs (tokenizer, preprocessor)
-            "scheduler/**",         # Scheduler config
-            "text_encoder/config.json",  # Text encoder config
-            "*.json",              # Root config files (including model_index.json)
+            "transformer/**",           # Transformer subfolder with weights
+            "text_encoder/**",          # Text encoder with model weights (including safetensors)
+            "vae/**",                    # VAE model weights
+            "processor/**",              # Processor configs (tokenizer, preprocessor)
+            "scheduler/**",              # Scheduler config
+            "tokenizer/**",              # Tokenizer files if separate
+            "*.json",                    # Root config files (including model_index.json)
+            "*.safetensors",            # Any safetensors files at root level
         ],
     )
     
