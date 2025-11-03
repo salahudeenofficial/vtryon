@@ -4,7 +4,9 @@
 # Installation instructions:
 # Step 1: Install PyTorch from CUDA 12.1 index:
 #   pip install torch==2.6.0 torchvision==0.21.0 torchaudio==2.6.0 --index-url https://download.pytorch.org/whl/cu121
-# Step 2: Install other dependencies:
+# Step 2: Install diffusers development version (required for QwenImageEditPlusPipeline):
+#   pip install git+https://github.com/huggingface/diffusers
+# Step 3: Install other dependencies:
 #   pip install -r requirements.txt
 
 # Core dependencies with compatible versions
