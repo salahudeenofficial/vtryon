@@ -7,6 +7,14 @@ from PIL import Image
 from diffusers import AutoModel, DiffusionPipeline, TorchAoConfig
 from torchao.dtypes.affine_quantized_tensor import AffineQuantizedTensor
 
+# Try to import QwenImageEditPlusPipeline if available
+try:
+    from diffusers import QwenImageEditPlusPipeline
+    QWEN_PIPELINE_AVAILABLE = True
+except ImportError:
+    QWEN_PIPELINE_AVAILABLE = False
+    print("[WARN] QwenImageEditPlusPipeline not available, will use DiffusionPipeline")
+
 # 🚑 Compatibility patches
 def _safe_has_compatible_shallow_copy_type(t1,t2):
     return True
@@ -59,12 +67,26 @@ def main():
         torch_dtype=torch_dtype,
     )
 
-    # Build pipeline
-    pipe = DiffusionPipeline.from_pretrained(
-        str(model_dir),
-        transformer=transformer,
-        torch_dtype=torch_dtype,
-    )
+    # Build pipeline - try QwenImageEditPlusPipeline first, fallback to DiffusionPipeline
+    try:
+        if QWEN_PIPELINE_AVAILABLE:
+            pipe = QwenImageEditPlusPipeline.from_pretrained(
+                str(model_dir),
+                transformer=transformer,
+                torch_dtype=torch_dtype,
+            )
+            print("[INFO] Loaded pipeline using QwenImageEditPlusPipeline")
+        else:
+            raise ImportError("QwenImageEditPlusPipeline not available")
+    except (AttributeError, ImportError, Exception) as e:
+        print(f"[WARN] QwenImageEditPlusPipeline loading failed: {e}")
+        print("[INFO] Falling back to DiffusionPipeline.from_pretrained...")
+        # Fallback: use DiffusionPipeline and let it auto-detect
+        pipe = DiffusionPipeline.from_pretrained(
+            str(model_dir),
+            transformer=transformer,
+            torch_dtype=torch_dtype,
+        )
 
     if lora_path:
         pipe.load_lora_weights(str(lora_path))
