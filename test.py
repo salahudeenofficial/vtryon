@@ -1,10 +1,9 @@
-from cmd import PROMPT
 import sys 
 import time
 from pathlib import Path
 
 import torch
-from PIL import image
+from PIL import Image
 from diffusers import AutoModel,DiffusionPipeline,TorchAoConfig
 from torchao.dtypes.affine_quantized_tensor import AffineQuantizedTensor
 def _safe_has_compatible_shallow_copy_type(t1,t2):
@@ -13,11 +12,11 @@ torch._has_compatible_shallow_copy_type = _safe_has_compatible_shallow_copy_type
 AffineQuantizedTensor.__torch_function__ = torch._C._disabled_torch_function_impl
 
 
-def maini():
+def main():
     model_dir = Path("./models")
     input_paths = [Path("./masked_person.jpeg"), Path("./cloth.png")]
     out_path = Path("qwen_edit_test.png")
-    lora_path = Path("./Qwen-Image-Lightning-4steps-V2.0.safetensors")
+    lora_path = Path("./models/Qwen-Image-Lightning-4steps-V2.0.safetensors")
     prompt = "by using the green masked area from Picture 1 as a reference for position , place the garment from Picture 2 on the person from Picture 1"
     negative_prompt = "ugly"
     steps = 4
