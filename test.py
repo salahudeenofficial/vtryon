@@ -6,10 +6,18 @@ import torch
 from PIL import Image
 from diffusers import AutoModel, DiffusionPipeline, TorchAoConfig
 from torchao.dtypes.affine_quantized_tensor import AffineQuantizedTensor
+
+# 🚑 Compatibility patches
 def _safe_has_compatible_shallow_copy_type(t1,t2):
     return True
 torch._has_compatible_shallow_copy_type = _safe_has_compatible_shallow_copy_type
 AffineQuantizedTensor.__torch_function__ = torch._C._disabled_torch_function_impl
+
+# 🚑 Patch torch.int1 if not available (PyTorch < 2.6.0)
+if not hasattr(torch, 'int1'):
+    # Create a dummy int1 dtype for compatibility
+    torch.int1 = torch.int8  # Use int8 as fallback
+    print("[INFO] torch.int1 not available, using torch.int8 as fallback")
 
 
 def main():
@@ -51,7 +59,7 @@ def main():
         torch_dtype=torch_dtype,
     )
 
-    # Build pipeline - will auto-detect QwenImageEditPlusPipeline from model_index.json
+    # Build pipeline
     pipe = DiffusionPipeline.from_pretrained(
         str(model_dir),
         transformer=transformer,

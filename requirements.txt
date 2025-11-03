@@ -1,9 +1,11 @@
 # PyTorch with CUDA 12.1 - compatible versions
-# torch 2.6.0+ is required for torch.int1 support (needed by torchao)
+# Note: PyTorch 2.6.0 not available, using 2.5.1 (latest available for CUDA 12.1)
+# PyTorch 2.5.1 works with CUDA 13.0 (backward compatible)
+# torch.int1 support may require newer version - if issues occur, try nightly build
 # 
 # Installation instructions:
-# Step 1: Install PyTorch from CUDA 12.1 index:
-#   pip install torch==2.6.0 torchvision==0.21.0 torchaudio==2.6.0 --index-url https://download.pytorch.org/whl/cu121
+# Step 1: Install PyTorch from CUDA 12.1 index (works with CUDA 13.0):
+#   pip install torch==2.5.1 torchvision==0.20.1 torchaudio==2.5.1 --index-url https://download.pytorch.org/whl/cu121
 # Step 2: Install diffusers development version (required for QwenImageEditPlusPipeline):
 #   pip install git+https://github.com/huggingface/diffusers
 # Step 3: Install other dependencies:
