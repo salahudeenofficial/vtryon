@@ -11,13 +11,17 @@ def main():
     model_dir = Path("./Qwen-Image-Edit-2509")
     model_dir.mkdir(parents=True, exist_ok=True)
     
-    print("[INFO] Downloading Qwen-Image-Edit-2509 model (complete repository)...")
-    # Download the full repository structure - all files
+    print("[INFO] Downloading Qwen-Image-Edit-2509 transformer subfolder and config files...")
+    # Download transformer subfolder and root config files needed for pipeline
     snapshot_download(
         repo_id="Qwen/Qwen-Image-Edit-2509",
         local_dir=str(model_dir),
         local_dir_use_symlinks=False,
         repo_type="model",
+        allow_patterns=[
+            "transformer/**",  # Transformer subfolder
+            "*.json",          # Config files at root
+        ],
     )
     
     # Download LoRA weights to models directory
