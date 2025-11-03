@@ -4,7 +4,7 @@ from pathlib import Path
 
 import torch
 from PIL import Image
-from diffusers import AutoModel,DiffusionPipeline,TorchAoConfig
+from diffusers import AutoModel, DiffusionPipeline, TorchAoConfig
 from torchao.dtypes.affine_quantized_tensor import AffineQuantizedTensor
 def _safe_has_compatible_shallow_copy_type(t1,t2):
     return True
@@ -51,7 +51,7 @@ def main():
         torch_dtype=torch_dtype,
     )
 
-    # Build pipeline
+    # Build pipeline - will auto-detect QwenImageEditPlusPipeline from model_index.json
     pipe = DiffusionPipeline.from_pretrained(
         str(model_dir),
         transformer=transformer,
