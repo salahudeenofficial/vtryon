@@ -9,6 +9,7 @@
 
 # Core dependencies with compatible versions
 torchao==0.12.0
-diffusers
+diffusers>=0.35.0  # Required for QwenImageEditPlusPipeline support
 pillow
 huggingface-hub
+accelerate
