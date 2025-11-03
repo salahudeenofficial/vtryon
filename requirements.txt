@@ -21,3 +21,4 @@ torchao==0.12.0
 pillow
 huggingface-hub
 accelerate
+transformers

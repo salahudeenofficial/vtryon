@@ -68,25 +68,39 @@ def main():
     )
 
     # Build pipeline - try QwenImageEditPlusPipeline first, fallback to DiffusionPipeline
-    try:
-        if QWEN_PIPELINE_AVAILABLE:
+    pipe = None
+    if QWEN_PIPELINE_AVAILABLE:
+        try:
             pipe = QwenImageEditPlusPipeline.from_pretrained(
                 str(model_dir),
                 transformer=transformer,
                 torch_dtype=torch_dtype,
             )
             print("[INFO] Loaded pipeline using QwenImageEditPlusPipeline")
-        else:
-            raise ImportError("QwenImageEditPlusPipeline not available")
-    except (AttributeError, ImportError, Exception) as e:
-        print(f"[WARN] QwenImageEditPlusPipeline loading failed: {e}")
-        print("[INFO] Falling back to DiffusionPipeline.from_pretrained...")
-        # Fallback: use DiffusionPipeline and let it auto-detect
-        pipe = DiffusionPipeline.from_pretrained(
-            str(model_dir),
-            transformer=transformer,
-            torch_dtype=torch_dtype,
-        )
+        except ImportError as e:
+            if "transformers" in str(e):
+                print(f"[WARN] Missing dependency: {e}")
+                print("[INFO] Install transformers: pip install transformers")
+            else:
+                print(f"[WARN] QwenImageEditPlusPipeline import failed: {e}")
+        except (AttributeError, Exception) as e:
+            print(f"[WARN] QwenImageEditPlusPipeline loading failed: {e}")
+    
+    # Fallback: use DiffusionPipeline and let it auto-detect (but skip if we already have a pipeline)
+    if pipe is None:
+        try:
+            print("[INFO] Using DiffusionPipeline.from_pretrained...")
+            pipe = DiffusionPipeline.from_pretrained(
+                str(model_dir),
+                transformer=transformer,
+                torch_dtype=torch_dtype,
+            )
+        except AttributeError as e:
+            if "'super' object has no attribute '__getattr__'" in str(e):
+                print("[ERR] diffusers version compatibility issue detected")
+                print("[INFO] Try: pip install --upgrade git+https://github.com/huggingface/diffusers")
+                raise RuntimeError("Diffusers compatibility error. Please upgrade diffusers dev version.") from e
+            raise
 
     if lora_path:
         pipe.load_lora_weights(str(lora_path))
