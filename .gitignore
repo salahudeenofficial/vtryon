@@ -11,6 +11,7 @@ ENV/
 
 # Models and data files
 models/
+Qwen-Image-Edit-2509/
 *.safetensors
 *.ckpt
 *.pt

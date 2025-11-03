@@ -13,7 +13,7 @@ AffineQuantizedTensor.__torch_function__ = torch._C._disabled_torch_function_imp
 
 
 def main():
-    model_dir = Path("./models")
+    model_dir = Path("./Qwen-Image-Edit-2509")
     input_paths = [Path("./masked_person.png"), Path("./cloth.png")]
     out_path = Path("qwen_edit_test.png")
     lora_path = Path("./models/Qwen-Image-Lightning-4steps-V2.0.safetensors")
