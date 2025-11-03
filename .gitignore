@@ -17,9 +17,9 @@ models/
 *.pth
 
 # Output images
-*.png
-*.jpg
-*.jpeg
+.png
+.jpg
+.jpeg
 *.gif
 !input2.png
 

@@ -14,7 +14,7 @@ AffineQuantizedTensor.__torch_function__ = torch._C._disabled_torch_function_imp
 
 def main():
     model_dir = Path("./models")
-    input_paths = [Path("./masked_person.jpeg"), Path("./cloth.png")]
+    input_paths = [Path("./masked_person.png"), Path("./cloth.png")]
     out_path = Path("qwen_edit_test.png")
     lora_path = Path("./models/Qwen-Image-Lightning-4steps-V2.0.safetensors")
     prompt = "by using the green masked area from Picture 1 as a reference for position , place the garment from Picture 2 on the person from Picture 1"
